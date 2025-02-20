@@ -23,7 +23,7 @@ services:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       LOG_LEVEL: INFO
-      FRONTEND_URL: "https://secrets.thefirewall.org" #change this to your frontend Url
+      FRONTEND_URL: "http://localhost:3000" #change this to your frontend Url
       PORT: 8000
     depends_on:
       db:
@@ -39,7 +39,7 @@ services:
       DB_NAME: postgres
       DB_USER: postgres
       DB_PASS: password
-      FRONTEND_URL: "https://secrets.thefirewall.org"  #change this to your frontend Url
+      FRONTEND_URL: "http://localhost:3000"  #change this to your frontend Url
     depends_on:
       db:
         condition: service_healthy
@@ -61,7 +61,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      VITE_API_BASE_URL: https://secrets.thefirewall.org/api    #change this to your backend url
+      VITE_API_BASE_URL: "http://localhost:80"
     depends_on:
       - nginx
     restart: unless-stopped
