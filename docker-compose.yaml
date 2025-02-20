@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  secrethound:
+    image: thefirewallappsec/thefirewall-backend-secrethound:v1.0.0-beta.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      LOG_LEVEL: INFO
+      FRONTEND_URL: "https://secrets.thefirewall.org" #change this to your frontend Url
+      PORT: 8000
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  user-auth:
+    image: thefirewallappsec/thefirewall-backend-auth:v1.0.0-beta.1
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: password
+      FRONTEND_URL: "https://secrets.thefirewall.org"  #change this to your frontend Url
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - secrethound
+      - user-auth
+    restart: unless-stopped
+
+  frontend:
+    image: thefirewallappsec/thefirewall-frontend:v1.0.0-beta.1
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_BASE_URL: https://secrets.thefirewall.org/api    #change this to your backend url
+    depends_on:
+      - nginx
+    restart: unless-stopped
