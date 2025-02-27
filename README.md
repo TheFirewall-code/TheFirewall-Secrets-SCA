@@ -1,4 +1,4 @@
-<img width="1179" alt="image" src="https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/blob/3a62498a9e124657cc6d99685ba7552a1e9529c7/static/Thefirewall-cover-image.png"/>
+<img width="1179" alt="image" src="https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/blob/a3820fb37078265bf7230680fd15f6c87cbd4174/static/Thefirewall-cover.png"/>
 
 <div align="center">
 <br>
