@@ -9,6 +9,9 @@
 
 Welcome to **The Firewall Appsec Platform** for **Secrets Scanning** and **Software Composition Analysis (SCA)**. This suite aims to provide security scanning tools to enhance your organisation's security posture.
 
+<img src="https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/blob/f44402009b80e74ed97fdaeb2945b1494021dac3/static/Untitled%20design-2.gif">
+
+
 ## Table of Contents
 
 - [Installation](#installation)
