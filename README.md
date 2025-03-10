@@ -7,7 +7,7 @@
 
 </div>
 
-Welcome to **The Firewall Appsec Platform** for **Secrets Scanning** and **Software Composition Analysis (SCA)**. This suite aims to provide security scanning tools to enhance your organisation's security posture.
+Welcome to The Firewall Project. Our security suite enhances your organization's security posture with a unified appsec platform featuring: Runtime **Secret Scanning** and **Software Composition Analysis (SCA)** via webhooks, comprehensive Asset Inventory, streamlined Incident Management, dynamic Scoring & Risk-Based Prioritization, RBAC, SSO, Rich API, and Slack/Jira Integrations.
 
 <img src="https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/blob/f44402009b80e74ed97fdaeb2945b1494021dac3/static/Untitled%20design-2.gif">
 
@@ -65,7 +65,7 @@ You have two installation options: Docker and AWS CloudFormation.
    Open the AWS CloudFormation console and click on **Create stack**.  
    Use the following template URL:
    ```bash
-   https://cf-templates-1ugfe9jf0z24o-ap-south-1.s3.ap-south-1.amazonaws.com/template-1739983635479.yaml
+   https://cf-templates-1ugfe9jf0z24o-ap-south-1.s3.ap-south-1.amazonaws.com/template-automatic.yaml
    ```
    
 3. **Launch the CloudFormation Stack**  
