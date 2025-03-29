@@ -15,7 +15,7 @@ services:
       retries: 10
 
   secrethound:
-    image: thefirewallappsec/thefirewall-backend-secrethound:v1.0.0-beta.1
+    image: thefirewallappsec/thefirewall-backend-secrethound:v1.0.1
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   user-auth:
-    image: thefirewallappsec/thefirewall-backend-auth:v1.0.0-beta.1
+    image: thefirewallappsec/thefirewall-backend-auth:v1.0.1
     environment:
       PORT: 3000
       DB_HOST: db
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: thefirewallappsec/thefirewall-frontend:v1.0.0-beta.1
+    image: thefirewallappsec/thefirewall-frontend:v1.0.1
     ports:
       - "3000:3000"
     environment:
