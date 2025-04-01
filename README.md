@@ -93,7 +93,7 @@ If you want to remove the deployment, delete the stack by selecting it in CloudF
 
 Alternatively, you can install **The Firewall Appsec Platform** directly via the [AWS Marketplace](https://aws.amazon.com/marketplace). Follow these steps:
 
-1. Go to the [The Firewall Appsec Platform](https://aws.amazon.com/marketplace/pp/prodview-sxhlfl6vz6rma) on AWS Marketplace.
+1. Go to [The Firewall Appsec Platform](https://aws.amazon.com/marketplace/pp/prodview-sxhlfl6vz6rma) on AWS Marketplace.
 2. **Subscribe for Free**: Click on the "Subscribe" button to get started.
 3. Once subscribed, **deploy the app** using the AWS Management Console.
 4. You can now manage and use both tools through your AWS environment.
