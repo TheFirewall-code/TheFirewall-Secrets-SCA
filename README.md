@@ -11,6 +11,21 @@ Welcome to The Firewall Project. Our security suite enhances your organization's
 
 <img src="https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/blob/f44402009b80e74ed97fdaeb2945b1494021dac3/static/Untitled%20design-2.gif">
 
+## 🔥 Live Demo  
+
+Try out **Firewall Platform** with our live demo!  
+
+**🖥 URL:**  [https://demo.thefirewall.org](https://demo.thefirewall.org)  
+
+**🔑 Login Credentials:**  
+- **Username:** `Demo`  
+- **Password:** `Zf8u8OMM(0j`  
+
+⚠ **Security Notice:**  
+- This demo is for evaluation purposes only.  
+- **Do not perform brute force attacks, DoS, or any malicious activity.**  
+- Misuse of the demo environment may result in access restrictions.  
+
 
 ## Table of Contents
 
@@ -148,7 +163,7 @@ We're here to help you succeed with The Firewall platform!
 
 📧 Email: support@thefirewall.org
 
-📞 Call: +91-8057599291, +91-8194015800
+📞 Call: Lavlesh(+91-8057599291), Sparsh(+91-8194015800)
 
  Questions? Choose any channel - we're responsive on all of them!
 
