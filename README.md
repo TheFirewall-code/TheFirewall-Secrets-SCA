@@ -117,6 +117,13 @@ Alternatively, you can install **The Firewall Appsec Platform** directly via the
 
 ---
 
+## Architecture
+![image](https://github.com/user-attachments/assets/7481689f-26fe-46c3-9726-4269cafc94f5)
+
+
+
+
+
 ## Usage
 
 After installation, you can begin using the tools:
@@ -140,15 +147,6 @@ Read our full Privacy Policy for detailed information about data handling and pr
 
 At Firewall, we take the security of our systems seriously. We value the input of security researchers and the broader community in helping to maintain high security standards. This policy sets out our commitments and guidelines for responsible vulnerability disclosure. Read our [full Policy](https://www.thefirewall.org/vdp) for detailed information about vulnerability disclosure program.
 
-## Licence
-The Firewall offers a Community License that is completely free and includes:
-
-* Unlimited number of assets
-* Unlimited users
-* All features and capabilities
-* Regular updates
-
-No hidden costs, no usage limits, no user restrictions. Just enter your email and get full access to enterprise-grade security.
 
 
 ## Support
