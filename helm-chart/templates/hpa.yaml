@@ -1,0 +1,8 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "thefirewall.fullname" . }}-frontend-hpa
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thefirewall.labels" . | nindent 4 }}
