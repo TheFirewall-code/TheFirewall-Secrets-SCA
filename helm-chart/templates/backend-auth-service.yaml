@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "thefirewall.fullname" . }}-backend-auth
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thefirewall.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-auth
+spec:
+  type: {{ .Values.backendAuth.service.type }}
+  ports:
+    - port: {{ .Values.backendAuth.service.port }}
+      targetPort: {{ .Values.backendAuth.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "thefirewall.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-auth
