@@ -14,7 +14,7 @@ sources:
   - https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/tree/main
 maintainers:
   - name: TheFirewall Team
-    email: support@thefirewall.com
+    email: support@thefirewall.org
 dependencies:
   - name: postgresql
     version: 12.0.0
