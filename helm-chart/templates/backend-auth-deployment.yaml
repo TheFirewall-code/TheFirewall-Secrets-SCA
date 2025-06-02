@@ -34,7 +34,7 @@ spec:
         - name: backend-auth
           securityContext:
             {{- toYaml .Values.security.securityContext | nindent 12 }}
-          image: {{ include "thefirewall.image" .Values.backendAuth.image }}
+          image: {{ include "thefirewall.image" (dict "repository" (default "default-repository" .Values.backendAuth.image.repository) "tag" (default "latest" .Values.backendAuth.image.tag) "global" .Values.global) }}
           imagePullPolicy: {{ .Values.backendAuth.image.pullPolicy }}
           ports:
             - name: http

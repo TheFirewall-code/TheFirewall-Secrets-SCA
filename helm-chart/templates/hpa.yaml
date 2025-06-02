@@ -2,7 +2,20 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "thefirewall.fullname" . }}-frontend-hpa
+  name: {{ include "thefirewall.fullname" . }}-hpa
   namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "thefirewall.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "thefirewall.fullname" . }}-backend-auth
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetCPUUtilizationPercentage }}
+{{- end }}

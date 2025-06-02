@@ -33,7 +33,7 @@ spec:
         - name: frontend
           securityContext:
             {{- toYaml .Values.security.securityContext | nindent 12 }}
-          image: {{ include "thefirewall.image" .Values.frontend.image }}
+          image: {{ include "thefirewall.image" (dict "repository" (default "default-repository" .Values.frontend.image.repository) "tag" (default "latest" .Values.frontend.image.tag) "global" .Values.global) }}
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - name: http

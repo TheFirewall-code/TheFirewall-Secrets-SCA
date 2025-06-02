@@ -85,9 +85,9 @@ Database port
 Full image name
 */}}
 {{- define "thefirewall.image" -}}
-{{- $registry := .Values.global.imageRegistry -}}
-{{- $repository := .repository -}}
-{{- $tag := .tag | toString -}}
-{{- printf "%s/%s:%s" $registry $repository $tag }}
-{{- end }}
+{{- $registry := default "docker.io" .global.imageRegistry -}}
+{{- $repository := .repository | default "thefirewallappsec" -}}
+{{- $tag := .tag | default "v1.0.1" -}}
+{{- printf "%s/%s:%s" $registry $repository $tag -}}
+{{- end -}}
 
