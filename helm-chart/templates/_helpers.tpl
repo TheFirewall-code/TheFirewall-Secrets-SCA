@@ -64,7 +64,7 @@ Database host
 */}}
 {{- define "thefirewall.databaseHost" -}}
 {{- if .Values.postgresql.enabled }}
-{{- printf "%s-postgresql" (include "thefirewall.fullname" .) }}
+{{- printf "%s-postgresql" .Release.Name }}
 {{- else }}
 {{- .Values.externalDatabase.host }}
 {{- end }}

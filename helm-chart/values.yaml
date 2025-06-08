@@ -41,7 +41,7 @@ backendMain:
   replicaCount: 2
   image:
     repository: "thefirewall-backend-secrethound"
-    tag: v1.0.11
+    tag: v1.0.1
     pullPolicy: IfNotPresent
   
   service:
