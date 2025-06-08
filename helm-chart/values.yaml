@@ -15,7 +15,7 @@ frontend:
   enabled: true
   replicaCount: 2
   image:
-    repository: "{ .Values.global.imagePrefix }}thefirewall-frontend"
+    repository: "thefirewall-frontend"
     tag: v1.0.1
     pullPolicy: IfNotPresent
   
@@ -30,7 +30,7 @@ frontend:
       cpu: "250m"
     limits:
       memory: "1Gi"
-      cpu: "500m"
+      #cpu: "500m"
   
   env:
     VITE_API_BASE_URL: ""  # Will be set dynamically
@@ -40,7 +40,7 @@ backendMain:
   enabled: true
   replicaCount: 2
   image:
-    repository: "{{ .Values.global.imagePrefix }}thefirewall-backend-secrethound"
+    repository: "thefirewall-backend-secrethound"
     tag: v1.0.11
     pullPolicy: IfNotPresent
   
@@ -55,7 +55,7 @@ backendMain:
       cpu: "500m"
     limits:
       memory: "2Gi"
-      cpu: "1000m"
+      #cpu: "1000m"
   
   env:
     PORT: "8000"
@@ -75,7 +75,7 @@ backendAuth:
   enabled: true
   replicaCount: 2
   image:
-    repository: "{{ .Values.global.imagePrefix }}thefirewall-backend-auth"
+    repository: "thefirewall-backend-auth"
     tag: v1.0.1
     pullPolicy: IfNotPresent
   
@@ -90,7 +90,7 @@ backendAuth:
       cpu: "500m"
     limits:
       memory: "2Gi"
-      cpu: "1000m"
+      #cpu: "1000m"
   
   env:
     PORT: "3000"
@@ -105,6 +105,10 @@ backendAuth:
 
 # Database configuration
 postgresql:
+  image:
+    registry: docker.io  # This should override the global
+    repository: bitnami/postgresql
+    tag: 15.0.0-debian-11-r1
   enabled: true
   auth:
     postgresPassword: ""  # Set via secret
