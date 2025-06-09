@@ -66,8 +66,8 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "thefirewall.fullname" . }}-secret
-                  key: db-password
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:

@@ -113,7 +113,7 @@ postgresql:
   auth:
     postgresPassword: ""  # Set via secret
     username: postgres
-    password: ""  # Set via secret
+    password: "postgres"  # Set via secret
     database: postgres
   
   primary:

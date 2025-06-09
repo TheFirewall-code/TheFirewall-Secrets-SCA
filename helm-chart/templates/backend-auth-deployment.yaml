@@ -66,8 +66,8 @@ spec:
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "thefirewall.fullname" . }}-secret
-                  key: db-password
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
             - name: FRONTEND_URL
               valueFrom:
                 configMapKeyRef:
