@@ -128,7 +128,7 @@ postgresql:
         cpu: "250m"
       limits:
         memory: "1Gi"
-        cpu: "1000m"
+        #cpu: "1000m"
 
 # External database (if not using in-cluster PostgreSQL)
 externalDatabase:
