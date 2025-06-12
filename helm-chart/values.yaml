@@ -1,6 +1,6 @@
 # Global configuration
 global:
-  imageRegistry: "thefirewallappsec"
+  imageRegistry: "docker.io"
   environment: "thefirewall-secrets"
   storageClass: ""
 
