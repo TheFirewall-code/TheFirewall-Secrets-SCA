@@ -1,0 +1,211 @@
+# Global configuration
+global:
+  imageRegistry: "docker.io"
+  environment: "thefirewall-secrets"
+  storageClass: ""
+
+# Application configuration
+app:
+  name: thefirewall
+  version: v1.0.1
+
+# Frontend configuration
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: "thefirewallappsec/thefirewall-frontend"
+    tag: v1.0.1
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      #cpu: "500m"
+  
+  env:
+    VITE_API_BASE_URL: ""  # Will be set dynamically
+
+# Backend Main configuration
+backendMain:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: "thefirewallappsec/thefirewall-backend-secrethound"
+    tag: v1.0.1
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      #cpu: "1000m"
+  
+  env:
+    PORT: "8000"
+    ALGORITHM: "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: "1440"
+  
+  healthCheck:
+    path: /health
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 20
+    successThreshold: 1
+    failureThreshold: 5
+
+# Backend Auth configuration
+backendAuth:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: "thefirewallappsec/thefirewall-backend-auth"
+    tag: v1.0.1
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      #cpu: "1000m"
+  
+  env:
+    PORT: "3000"
+  
+  healthCheck:
+    path: /v2/user-auth/health
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 20
+    successThreshold: 1
+    failureThreshold: 5
+
+# Database configuration
+postgresql:
+  image:
+    registry: docker.io  # This should override the global
+    repository: bitnami/postgresql
+    tag: 15.0.0-debian-11-r1
+  enabled: true
+  auth:
+    postgresPassword: ""  # Set via secret
+    username: postgres
+    password: "postgres"  # Set via secret
+    database: postgres
+  
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: ""
+    
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+      limits:
+        memory: "1Gi"
+        #cpu: "1000m"
+
+# External database (if not using in-cluster PostgreSQL)
+externalDatabase:
+  enabled: false
+  host: ""
+  port: 5432
+  database: postgres
+  username: postgres
+  password: ""
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"  # or "alb" for AWS ALB
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # For AWS ALB:
+    # kubernetes.io/ingress.class: alb
+    # alb.ingress.kubernetes.io/scheme: internet-facing
+    # alb.ingress.kubernetes.io/target-type: ip
+  
+  hosts:
+    - host: thefirewall.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: frontend
+        - path: /api/v2
+          pathType: Prefix
+          service: backend-main
+        - path: /v2/user-auth
+          pathType: Prefix
+          service: backend-auth
+  
+  tls: []
+  #  - secretName: thefirewall-tls
+  #    hosts:
+  #      - thefirewall.example.com
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: true
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Security configuration
+security:
+  podSecurityContext:
+    runAsUser: 0
+    fsGroup: 0
+  
+  securityContext:
+    allowPrivilegeEscalation: true
+    runAsUser: 0
+   
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Image pull secrets
+imagePullSecrets:
+  - name: ecr-registry-secret
+
+# Node selector, tolerations and affinity
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Monitoring and observability
+monitoring:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+    namespace: monitoring
+    interval: 30s

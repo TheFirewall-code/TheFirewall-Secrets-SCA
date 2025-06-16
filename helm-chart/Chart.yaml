@@ -1,0 +1,21 @@
+apiVersion: v2
+name: thefirewall-app
+description: A Helm chart for TheFirewall Application Security Platform
+type: application
+version: 1.0.1
+appVersion: "1.0.1"
+icon: https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/blob/main/static/dark.svg
+keywords:
+  - security
+  - appsec
+  - firewall
+home: https://thefirewall.org
+sources:
+  - https://github.com/TheFirewall-code/TheFirewall-Secrets-SCA/tree/main
+maintainers:
+  - name: TheFirewall Team
+    email: support@thefirewall.org
+dependencies:
+  - name: postgresql
+    version: 12.0.0
+    repository: https://charts.bitnami.com/bitnami

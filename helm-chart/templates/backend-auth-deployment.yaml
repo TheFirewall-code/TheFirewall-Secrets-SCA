@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "thefirewall.fullname" . }}-backend-auth
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thefirewall.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-auth
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.backendAuth.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "thefirewall.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backend-auth
+  template:
+    metadata:
+      labels:
+        {{- include "thefirewall.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: backend-auth
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thefirewall.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.security.podSecurityContext | nindent 8 }}
+      containers:
+        - name: backend-auth
+          securityContext:
+            {{- toYaml .Values.security.securityContext | nindent 12 }}
+          image: {{ include "thefirewall.image" (dict "repository" (default "default-repository" .Values.backendAuth.image.repository) "tag" (default "latest" .Values.backendAuth.image.tag) "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.backendAuth.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backendAuth.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.backendAuth.env.PORT | quote }}
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
+            - name: FRONTEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: FRONTEND_URL
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.backendAuth.healthCheck.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.backendAuth.healthCheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backendAuth.healthCheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.backendAuth.healthCheck.timeoutSeconds }}
+            failureThreshold: {{ .Values.backendAuth.healthCheck.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.backendAuth.healthCheck.path }}
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: {{ .Values.backendAuth.healthCheck.timeoutSeconds }}
+            successThreshold: {{ .Values.backendAuth.healthCheck.successThreshold }}
+          resources:
+            {{- toYaml .Values.backendAuth.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

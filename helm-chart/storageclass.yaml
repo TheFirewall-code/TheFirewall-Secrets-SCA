@@ -1,0 +1,14 @@
+#kubectl apply -f https://openebs.github.io/charts/openebs-operator.yaml
+#kubectl apply -f storageclass.yaml
+#helm install thefirewall ./thefirewall-chart \
+#  --set primary.persistence.storageClass=openebs-hostpath
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-hostpath
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: openebs.io/local
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

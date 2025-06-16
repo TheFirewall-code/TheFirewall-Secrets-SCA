@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "thefirewall.fullname" . }}-backend-main
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thefirewall.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-main
+spec:
+  type: {{ .Values.backendMain.service.type }}
+  ports:
+    - port: {{ .Values.backendMain.service.port }}
+      targetPort: {{ .Values.backendMain.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "thefirewall.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-main

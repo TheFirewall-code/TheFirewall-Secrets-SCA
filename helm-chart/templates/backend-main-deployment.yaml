@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "thefirewall.fullname" . }}-backend-main
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thefirewall.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend-main
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.backendMain.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "thefirewall.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backend-main
+  template:
+    metadata:
+      labels:
+        {{- include "thefirewall.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: backend-main
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thefirewall.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.security.podSecurityContext | nindent 8 }}
+      containers:
+        - name: backend-main
+          securityContext:
+            {{- toYaml .Values.security.securityContext | nindent 12 }}
+          image: {{ include "thefirewall.image" (dict "repository" (default "default-repository" .Values.backendMain.image.repository) "tag" (default "latest" .Values.backendMain.image.tag) "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.backendMain.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backendMain.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.backendMain.env.PORT | quote }}
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: POSTGRES_PORT
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-secret
+                  key: secret-key
+            - name: ALGORITHM
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: ALGORITHM
+            - name: ACCESS_TOKEN_EXPIRE_MINUTES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: ACCESS_TOKEN_EXPIRE_MINUTES
+            - name: FRONTEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "thefirewall.fullname" . }}-config
+                  key: FRONTEND_URL
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.backendMain.healthCheck.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.backendMain.healthCheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backendMain.healthCheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.backendMain.healthCheck.timeoutSeconds }}
+            failureThreshold: {{ .Values.backendMain.healthCheck.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.backendMain.healthCheck.path }}
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: {{ .Values.backendMain.healthCheck.timeoutSeconds }}
+            successThreshold: {{ .Values.backendMain.healthCheck.successThreshold }}
+          resources:
+            {{- toYaml .Values.backendMain.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
